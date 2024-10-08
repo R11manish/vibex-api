@@ -9,7 +9,7 @@ GO_FILES = $(wildcard $(SRC_DIR)/*.go)
 
 
 run: 
-	go run ${SRC_DIR}/cmd/api/main.go
+	gow run ${SRC_DIR}/cmd/api/main.go
 
 
 
