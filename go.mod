@@ -1,4 +1,4 @@
-module github.com/R11manish/vibex-api
+module vibex-api
 
 go 1.23
 

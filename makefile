@@ -7,7 +7,7 @@ GO_FILES := $(wildcard $(SRC_DIR)/*.go)
 .PHONY: run generate-env help
 
 run: 
-	go run ${SRC_DIR}/cmd/api/main.go
+	gow run ${SRC_DIR}/cmd/api/main.go
 
 generate-env:
 	./generate-env.sh local

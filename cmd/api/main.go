@@ -1,13 +1,19 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"log"
+	config "vibex-api/configs"
+	"vibex-api/internal/routes"
+)
 
 func main() {
-	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-	r.Run()
+	//load environment
+	config.LoadEnv()
+
+	//postgress connection
+	config.ConnectDB()
+
+	router := routes.SetupRouter()
+
+	log.Fatal(router.Run(":8080"))
 }
