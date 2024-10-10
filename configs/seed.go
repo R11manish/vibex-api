@@ -10,7 +10,7 @@ func Seed() {
 
 	statuses := []models.Status{
 		{Value: "active"},
-		{Value: "inactive"},
+		{Value: "pending"},
 		{Value: "blocked"},
 	}
 

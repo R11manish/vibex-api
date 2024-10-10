@@ -3,7 +3,7 @@ package routes
 import (
 	config "vibex-api/configs"
 	"vibex-api/internal/controller"
-	"vibex-api/pkg/middleware"
+	"vibex-api/middleware"
 
 	"github.com/gin-gonic/gin"
 )
