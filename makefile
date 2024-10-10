@@ -4,7 +4,10 @@ SRC_DIR := .
 BUILD_DIR := build
 GO_FILES := $(wildcard $(SRC_DIR)/*.go)
 
-.PHONY: run generate-env help
+.PHONY: run generate-env help db
+
+db:
+	docker compose --env-file .env.local up -d
 
 run: 
 	gow run ${SRC_DIR}/cmd/api/main.go

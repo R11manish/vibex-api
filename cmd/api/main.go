@@ -11,7 +11,7 @@ func main() {
 	config.LoadEnv()
 
 	//postgress connection
-	config.ConnectDB()
+	config.Connect()
 
 	router := routes.SetupRouter()
 
