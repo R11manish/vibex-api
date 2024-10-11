@@ -2,6 +2,7 @@ package models
 
 type SignUpRequest struct {
 	Username string  `json:"username" binding:"required"`
+	Password string  `json:"password" binding:"required"`
 	Name     *string `json:"name,omitempty"`                 // Pointer to string to make it optional
 	Email    string  `json:"email" binding:"required,email"` // Validates email format
 }

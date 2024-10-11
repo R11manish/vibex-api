@@ -16,9 +16,10 @@ type User struct {
 	Email             string     `gorm:"size:255;unique"`
 	StatusID          uint       `gorm:"not null"`            // Foreign key to Status table
 	Status            Status     `gorm:"foreignKey:StatusID"` // Relationship to Status
+	Password          string     `gorm:"size:255;not null"`   // Hashed password
 }
 
 type Status struct {
 	ID    uint   `gorm:"primaryKey;autoIncrement"`
-	Value string `gorm:"size:50;not null;unique"` // Values like active, inactive, block
+	Value string `gorm:"size:50;not null;unique"` // Values like active, pending, blocked
 }

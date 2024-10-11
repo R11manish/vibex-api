@@ -13,9 +13,13 @@ func SetupRouter() *gin.Engine {
 
 	router := gin.Default()
 	router.Use(middleware.LoggerMiddleware(config.Logger))
+	db := config.GetDB()
 
+	//repo initilization
+
+	userRepo := NewUserRepository(db)
 	// auth
-	authUseCase := usecase.NewAuthUseCase()
+	authUseCase := usecase.NewAuthUseCase(userRepo)
 	authController := controller.NewAuthController(authUseCase)
 
 	router.GET("/ping", func(c *gin.Context) {
