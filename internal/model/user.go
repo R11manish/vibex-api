@@ -6,7 +6,7 @@ import (
 
 // User struct representing the user table in PostgreSQL
 type User struct {
-	ID                uint64     `gorm:"primaryKey;autoIncrement:false"` // Snowflake ID
+	ID                uint64     `gorm:"primaryKey;autoIncrement:false;index"` // Snowflake ID
 	Username          string     `gorm:"size:255;not null;unique"`
 	Name              string     `gorm:"size:255"`
 	CreatedAt         time.Time  `gorm:"autoCreateTime"`
