@@ -5,6 +5,7 @@ import (
 	"fmt"
 	models "vibex-api/internal/model"
 	"vibex-api/internal/repository"
+	"vibex-api/internal/services"
 	utils "vibex-api/internal/utlis"
 )
 
@@ -15,18 +16,45 @@ type AuthUseCase interface {
 
 type authUseCaseImpl struct {
 	userRepository repository.UserRepository
+	jwtService     services.JWTService
 }
 
-func NewAuthUseCase(userRepository repository.UserRepository) AuthUseCase {
+func NewAuthUseCase(userRepository repository.UserRepository, jwtService services.JWTService) AuthUseCase {
 	return &authUseCaseImpl{
 		userRepository: userRepository,
+		jwtService:     jwtService,
 	}
 }
 
 func (a *authUseCaseImpl) Login(signInRequest models.SignInRequest) (string, error) {
-	fmt.Printf("SignInRequest: %+v\n", signInRequest.Identifier)
 
-	return "some-token", nil
+	var user *models.User
+	var err error
+
+	if utils.IsEmail(signInRequest.Identifier) {
+		user, err = a.userRepository.FindUserByEmail(signInRequest.Identifier)
+	} else {
+		user, err = a.userRepository.FindUserByUsername(signInRequest.Identifier)
+	}
+
+	if err != nil {
+		return "", fmt.Errorf("user not found: %v", err)
+	}
+	if user == nil {
+		return "", errors.New("invalid email or password")
+	}
+
+	err = utils.CheckPassword(user.Password, signInRequest.Password)
+	if err != nil {
+		return "", errors.New("invalid email or password")
+	}
+
+	token, err := a.jwtService.GenerateToken(user.ID)
+	if err != nil {
+		return "", errors.New("failed to generate token")
+	}
+
+	return token, nil
 }
 
 func (a *authUseCaseImpl) SignUp(signUpRequest models.SignUpRequest) error {
@@ -43,10 +71,9 @@ func (a *authUseCaseImpl) SignUp(signUpRequest models.SignUpRequest) error {
 		return errors.New("email already registered")
 	}
 
-	//check password validation
 	// Check password validation
 	if err := utils.CheckPasswordStrength(signUpRequest.Password); err != nil {
-		return fmt.Errorf("password validation failed: %v", err) // Return specific error
+		return fmt.Errorf("password validation failed: %v", err)
 	}
 
 	hashedPassword, err := utils.HashPassword(signUpRequest.Password)
