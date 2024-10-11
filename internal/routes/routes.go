@@ -4,6 +4,7 @@ import (
 	config "vibex-api/configs"
 	"vibex-api/internal/controller"
 	"vibex-api/internal/middleware"
+	"vibex-api/internal/repository"
 	"vibex-api/internal/usecase"
 
 	"github.com/gin-gonic/gin"
@@ -17,7 +18,7 @@ func SetupRouter() *gin.Engine {
 
 	//repo initilization
 
-	userRepo := NewUserRepository(db)
+	userRepo := repository.NewUserRepository(db)
 	// auth
 	authUseCase := usecase.NewAuthUseCase(userRepo)
 	authController := controller.NewAuthController(authUseCase)

@@ -39,5 +39,22 @@ func (a *authControllerIml) LoginHandler(c *gin.Context) {
 }
 
 func (a *authControllerIml) SignUpHandler(c *gin.Context) {
+	var signUpRequest models.SignUpRequest
 
+	// Bind the incoming JSON request to the signUpRequest struct
+	if err := c.ShouldBindJSON(&signUpRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request", "details": err.Error()})
+		return
+	}
+
+	// Call the SignUp method from the authUseCase
+	err := a.authUseCase.SignUp(signUpRequest)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "sign up failed", "details": err.Error()})
+		return
+	}
+
+	// Respond with success if no errors occurred
+	c.JSON(http.StatusOK, gin.H{"message": "account created successfully"})
 }
+

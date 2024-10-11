@@ -43,13 +43,24 @@ func (a *authUseCaseImpl) SignUp(signUpRequest models.SignUpRequest) error {
 		return errors.New("email already registered")
 	}
 
+	//check password validation
+	// Check password validation
+	if err := utils.CheckPasswordStrength(signUpRequest.Password); err != nil {
+		return fmt.Errorf("password validation failed: %v", err) // Return specific error
+	}
+
 	hashedPassword, err := utils.HashPassword(signUpRequest.Password)
 	if err != nil {
 		return fmt.Errorf("failed to hash password: %v", err)
 	}
 
+	id, err := utils.GenerateID()
+	if err != nil {
+		return fmt.Errorf("failed to generate id: %v", err)
+	}
+
 	newUser := &models.User{
-		ID:       2232323232,
+		ID:       id,
 		Username: signUpRequest.Username,
 		Name:     deref(signUpRequest.Name),
 		Email:    signUpRequest.Email,
