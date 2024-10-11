@@ -3,7 +3,8 @@ package routes
 import (
 	config "vibex-api/configs"
 	"vibex-api/internal/controller"
-	"vibex-api/middleware"
+	"vibex-api/internal/middleware"
+	"vibex-api/internal/usecase"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,7 +14,9 @@ func SetupRouter() *gin.Engine {
 	router := gin.Default()
 	router.Use(middleware.LoggerMiddleware(config.Logger))
 
-	authController := controller.NewAuthController()
+	// auth
+	authUseCase := usecase.NewAuthUseCase()
+	authController := controller.NewAuthController(authUseCase)
 
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
